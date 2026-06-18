@@ -27,6 +27,7 @@ jQuery(document).ready(function() {
                 order: {
                     paymentDataPresent: false,
                     merchantName: String(jQuery('#nn_business_name').val()),
+                    lineItems: jQuery('#nn_article_details').val(),
                 },
                 button: {
                     type: jQuery('#nn_button_type').val(),

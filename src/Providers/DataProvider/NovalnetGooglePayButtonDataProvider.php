@@ -74,6 +74,14 @@ class NovalnetGooglePayButtonDataProvider
                 // Get the order total basket amount
                 $orderAmount = $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
             }
+            if($basket->couponDiscount){
+                $article_details[] = array(
+                    'label'  => 'Discount',
+                    'amount' => $basket->couponDiscount,
+                    'type'   => 'SUBTOTAL',
+                );
+    
+            }
             // Get the Payment MOP Id
             $paymentMethodDetails = $paymentHelper->getPaymentMethodByKey('NOVALNET_GOOGLEPAY');
             // Get the order language
@@ -87,6 +95,7 @@ class NovalnetGooglePayButtonDataProvider
                                 'clientKey'     => trim($settingsService->getPaymentSettingsValue('novalnet_client_key')),
                                 'merchantId'    => $settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay'),
                                 'sellerName'    => !empty($sellerName) ? $sellerName : $webstoreHelper->getCurrentWebstoreConfiguration()->name,
+                                'article_details' => $article_details,
                                 'enforce'       => $settingsService->getPaymentSettingsValue('enforce', 'novalnet_googlepay'),
                                 'buttonType'    => $settingsService->getPaymentSettingsValue('button_type', 'novalnet_googlepay'),
                                 'buttonHeight'  => $settingsService->getPaymentSettingsValue('button_height', 'novalnet_googlepay'),
