@@ -81,15 +81,16 @@ class NovalnetGooglePayButtonDataProvider
                 'amount' => $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount),
                 'type'   => 'SUBTOTAL',
             );
+
+            if ($basket->couponDiscount < 0) {
+                $article_details[] = array(
+                    'label'  => 'Discount',
+                    'amount' => (string) ($basket->couponDiscount * -1),
+                    'type'   => 'SUBTOTAL',
+                );
+            }
             $articleDetailsJson = json_encode($article_details);
             
-            // if ($basket->couponDiscount) {
-            //     $article_details[] = array(
-            //         'label'  => 'Discount',
-            //         'amount' => $basket->couponDiscount * -1,
-            //         'type'   => 'SUBTOTAL',
-            //     );
-            // }
             // Get the Payment MOP Id
             $paymentMethodDetails = $paymentHelper->getPaymentMethodByKey('NOVALNET_GOOGLEPAY');
             // Get the order language
