@@ -125,7 +125,29 @@ jQuery('.fa-arrow-right').parent('button').show();
 });
 
 $(document).ajaxComplete(function(event, xhr, settings) {
-    console.log("AJAX:", settings.url);
+
+    if (
+        settings.url.includes('/rest/io/coupon/') ||
+        settings.url.includes('/rest/io/checkout/shippingId/')
+    ) {
+
+        if (!sessionStorage.getItem('nn_reload_done')) {
+
+            sessionStorage.setItem('nn_reload_done', '1');
+
+            setTimeout(function() {
+                location.reload();
+            }, 300);
+        }
+    }
+});
+
+window.addEventListener('load', function() {
+
+    setTimeout(function() {
+        sessionStorage.removeItem('nn_reload_done');
+    }, 2000);
+
 });
 </script>
 
