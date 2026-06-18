@@ -81,6 +81,7 @@ class NovalnetGooglePayButtonDataProvider
                 'amount' => $basket->basketAmount,
                 'type'   => 'SUBTOTAL',
             );
+            $articleDetailsJson = json_encode($article_details);
             
             // if ($basket->couponDiscount) {
             //     $article_details[] = array(
@@ -102,7 +103,7 @@ class NovalnetGooglePayButtonDataProvider
                                 'clientKey'     => trim($settingsService->getPaymentSettingsValue('novalnet_client_key')),
                                 'merchantId'    => $settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay'),
                                 'sellerName'    => !empty($sellerName) ? $sellerName : $webstoreHelper->getCurrentWebstoreConfiguration()->name,
-                                'article_details' => $article_details,
+                                'article_details' => $articleDetailsJson,
                                 'enforce'       => $settingsService->getPaymentSettingsValue('enforce', 'novalnet_googlepay'),
                                 'buttonType'    => $settingsService->getPaymentSettingsValue('button_type', 'novalnet_googlepay'),
                                 'buttonHeight'  => $settingsService->getPaymentSettingsValue('button_height', 'novalnet_googlepay'),
