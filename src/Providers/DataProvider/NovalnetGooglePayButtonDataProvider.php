@@ -76,7 +76,7 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details[] = array(
                 'label'  => 'Product',
-                'amount' => $basket->basketAmount,
+                'amount' => $basket->itemSum + $basket->shippingAmount,
                 'type'   => 'SUBTOTAL',
             );
             
