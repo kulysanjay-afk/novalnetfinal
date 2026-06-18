@@ -74,9 +74,13 @@ class NovalnetGooglePayButtonDataProvider
                 // Get the order total basket amount
                 $orderAmount = $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
             }
+            $article_details = [];
+
+            
+
             $article_details[] = array(
                 'label'  => 'Product',
-                'amount' => $basket->itemSum + $basket->shippingAmount,
+                'amount' => $basket->basketAmount,
                 'type'   => 'SUBTOTAL',
             );
             
