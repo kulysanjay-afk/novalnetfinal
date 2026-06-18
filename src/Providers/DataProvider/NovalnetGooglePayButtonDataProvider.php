@@ -78,7 +78,7 @@ class NovalnetGooglePayButtonDataProvider
 
             $article_details[] = array(
                 'label'  => 'Product',
-                'amount' => (string) $basket->basketAmount,
+                'amount' => $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount),
                 'type'   => 'SUBTOTAL',
             );
             $articleDetailsJson = json_encode($article_details);
