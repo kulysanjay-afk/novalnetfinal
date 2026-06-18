@@ -72,7 +72,7 @@ class NovalnetGooglePayButtonDataProvider
                     $basket->basketAmount = $basket->basketAmountNet;
                 }
                 // Get the order total basket amount
-                $orderAmount = $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
+                $orderAmount = (string) $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
             }
             $article_details = [];
 
