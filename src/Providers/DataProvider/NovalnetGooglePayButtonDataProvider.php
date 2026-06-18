@@ -80,20 +80,20 @@ class NovalnetGooglePayButtonDataProvider
 
             $article_details[] = array(
                 'label'  => 'Products',
-                'amount' => (string)$basket->itemSum,
+                'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->itemSum),
                 'type'   => 'SUBTOTAL',
             );
             
             $article_details[] = array(
                 'label'  => 'Shipping',
-                'amount' => (string)$basket->shippingAmount,
+                'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->shippingAmount),
                 'type'   => 'SUBTOTAL',
             );
             
             if ($basket->couponDiscount < 0) {
                 $article_details[] = array(
                     'label'  => 'Discount',
-                    'amount' => (string)($basket->couponDiscount * -1),
+                    'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->couponDiscount * -1),
                     'type'   => 'SUBTOTAL',
                 );
             }
