@@ -102,6 +102,14 @@ jQuery('.fa-arrow-right').parent('button').show();
     location.reload();
 });
 
+document.addEventListener('shippingProfileChanged', function () {
+  console.log('ssssssssss);
+});
+
+document.addEventListener('couponApplied', function () {
+    console.log('dddddddddddd);
+});
+
          
 
      if (nnPaymentMethodKey === 'NOVALNET_APPLEPAY') {
