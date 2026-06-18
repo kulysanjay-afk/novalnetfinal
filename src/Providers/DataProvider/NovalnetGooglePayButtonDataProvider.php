@@ -77,7 +77,7 @@ class NovalnetGooglePayButtonDataProvider
             if($basket->couponDiscount){
                 $article_details[] = array(
                     'label'  => 'Discount',
-                    'amount' => $basket->couponDiscount,
+                    'amount' => -abs($basket->couponDiscount),
                     'type'   => 'SUBTOTAL',
                 );
     
