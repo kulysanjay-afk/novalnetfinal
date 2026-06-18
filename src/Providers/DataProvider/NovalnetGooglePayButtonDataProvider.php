@@ -74,13 +74,18 @@ class NovalnetGooglePayButtonDataProvider
                 // Get the order total basket amount
                 $orderAmount = $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
             }
-            if($basket->couponDiscount){
+            $article_details[] = array(
+                'label'  => 'Product',
+                'amount' => $basket->basketAmount,
+                'type'   => 'SUBTOTAL',
+            );
+            
+            if ($basket->couponDiscount) {
                 $article_details[] = array(
                     'label'  => 'Discount',
                     'amount' => $basket->couponDiscount * -1,
                     'type'   => 'SUBTOTAL',
                 );
-    
             }
             // Get the Payment MOP Id
             $paymentMethodDetails = $paymentHelper->getPaymentMethodByKey('NOVALNET_GOOGLEPAY');
