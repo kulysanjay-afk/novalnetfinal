@@ -529,7 +529,7 @@ class WebhookController extends Controller
 
             // Create the payment to the plenty order
             $this->paymentHelper->createPlentyPayment($this->eventData);
-
+            $this->sendWebhookMail($webhookComments);
             return $this->renderTemplate($webhookComments);
         } else { // Due Date and Amount Update process
             // Due date update text

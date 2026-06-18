@@ -307,26 +307,42 @@ class PaymentHelper
      *
      * @return string
      */
-	public function getRemoteIpAddress(array $novalnetHostIP) // Set default as an empty array
-	{
-		$ip_keys = ['HTTP_X_FORWARDED_HOST', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'];
-		
-		foreach ($ip_keys as $key) {
-			if (array_key_exists($key, $_SERVER) && !empty($_SERVER[$key])) {
-				if (in_array($key, ['HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED_HOST'])) {
-					$forwardedIPs = explode(',', $_SERVER[$key]);
-					$forwardedIPs = array_map('trim', $forwardedIPs);
-						foreach ($novalnetHostIP as $hostIP) {
-							if (in_array($hostIP, $forwardedIPs, true)) {
-								return $hostIP;
-							}
-						}
-						return $_SERVER[$key];
-					}
-					return $_SERVER[$key]; 
-				}
-			}
-	}
+    function getRemoteIpAddress(array $allowedIps)
+    {
+       $ip_keys = [
+       'HTTP_X_FORWARDED_HOST',
+       'HTTP_X_FORWARDED_FOR',
+       'HTTP_X_REAL_IP',
+       'HTTP_CLIENT_IP',
+       'HTTP_X_FORWARDED',
+       'HTTP_X_CLUSTER_CLIENT_IP',
+       'HTTP_FORWARDED_FOR',
+       'HTTP_FORWARDED',
+       'REMOTE_ADDR'
+       ];
+
+      $invalidIp = '';
+
+     foreach ($ip_keys as $key) {
+
+       if (empty($_SERVER[$key])) {
+           continue;
+       }
+
+       $ips = array_map('trim', explode(',', $_SERVER[$key]));
+
+       foreach ($ips as $ip) {
+
+           if (in_array($ip, $allowedIps, true)) {
+               return $ip; 
+           }
+
+           $invalidIp = $ip;
+       }
+   }
+
+   return $invalidIp; 
+  }
 	
     /**
      * Convert the orderamount to cents
