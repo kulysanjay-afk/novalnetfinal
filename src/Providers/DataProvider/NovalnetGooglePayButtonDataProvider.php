@@ -76,19 +76,29 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details = [];
 
+           
+
             $article_details[] = array(
-                'label'  => 'Product',
-                'amount' => $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount),
+                'label'  => 'Products',
+                'amount' => (string)$basket->itemSum,
                 'type'   => 'SUBTOTAL',
             );
-
+            
+            $article_details[] = array(
+                'label'  => 'Shipping',
+                'amount' => (string)$basket->shippingAmount,
+                'type'   => 'SUBTOTAL',
+            );
+            
             if ($basket->couponDiscount < 0) {
                 $article_details[] = array(
                     'label'  => 'Discount',
-                    'amount' => (string) ($basket->couponDiscount * -1),
+                    'amount' => (string)($basket->couponDiscount * -1),
                     'type'   => 'SUBTOTAL',
                 );
             }
+
+
             $articleDetailsJson = json_encode($article_details);
             
             // Get the Payment MOP Id
