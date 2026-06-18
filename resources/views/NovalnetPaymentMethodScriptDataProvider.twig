@@ -102,15 +102,6 @@ jQuery('.fa-arrow-right').parent('button').show();
     location.reload();
 });
 
-document.addEventListener('shippingProfileChanged', function () {
-  console.log('ssssssssss);
-});
-
-document.addEventListener('couponApplied', function () {
-    console.log('dddddddddddd);
-});
-
-         
 
      if (nnPaymentMethodKey === 'NOVALNET_APPLEPAY') {
 
@@ -133,6 +124,9 @@ document.addEventListener('couponApplied', function () {
 
 });
 
+$(document).ajaxComplete(function(event, xhr, settings) {
+    console.log("AJAX:", settings.url);
+});
 </script>
 
 <form id="redirectPayment" method="post" action="{{redirectUrl}}">
