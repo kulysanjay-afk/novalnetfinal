@@ -85,6 +85,8 @@ document.addEventListener('billingAddressChanged', function () {
     if (!billingAddress) {
        
       Googlepaybutton = jQuery("#nn_google_pay").is(":visible")
+
+      console.log(Googlepaybutton);
       if(Googlepaybutton){
 
 jQuery("#nn_google_pay").show();
