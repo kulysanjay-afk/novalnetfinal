@@ -74,54 +74,7 @@ function iOS() {
 $(document).ready(function () {
 
     showApplePayButton();
-    const observer = new MutationObserver(function (mutations) {
-
-        mutations.forEach(function (mutation) {
-
-            var nnPaymentMethodKey = $('#nn_paymentmethod_key').val();
-
-document.addEventListener('billingAddressChanged', function () {
-
-    const billingAddress = ceresStore.state.address.billingAddress;
-    if (!billingAddress) {
-       
-      Googlepaybutton = jQuery("#nn_google_pay").is(":visible")
-      if(Googlepaybutton){
-
-jQuery("#nn_google_pay").show();
-jQuery('.fa-arrow-right').parent('button').hide();
-      }
-      else{
-jQuery("#nn_google_pay").hide();
-jQuery('.fa-arrow-right').parent('button').show();
-
-      }
-        return;
-    }
-
-    location.reload();
-});
-
-
-     if (nnPaymentMethodKey === 'NOVALNET_APPLEPAY') {
-
-                if ($(mutation.target).find(
-                    'li[data-id="' + $('#nn_paymentmethod_id').val() + '"]'
-                ).length > 0) {
-
-                    showApplePayButton();
-                }
-            }
-            
-        });
-
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
+    
 });
 
 $(document).ajaxComplete(function(event, xhr, settings) {
@@ -140,6 +93,44 @@ $(document).ajaxComplete(function(event, xhr, settings) {
             }, 300);
         }
     }
+
+ if (settings.url.includes('/rest/io/customer/address/')) {
+
+        const billingAddress = ceresStore.state.address.billingAddress;
+
+        if (!billingAddress) {
+
+            var Googlepaybutton = jQuery("#nn_google_pay").is(":visible");
+
+            if (Googlepaybutton) {
+                jQuery("#nn_google_pay").show();
+                jQuery('.fa-arrow-right').parent('button').hide();
+            } else {
+                jQuery("#nn_google_pay").hide();
+                jQuery('.fa-arrow-right').parent('button').show();
+            }
+
+            return;
+        }
+
+        setTimeout(function() {
+                location.reload();
+            }, 300);
+    }
+
+    var nnPaymentMethodKey = $('#nn_paymentmethod_key').val();
+
+     if (nnPaymentMethodKey === 'NOVALNET_APPLEPAY') {
+
+                if ($(mutation.target).find(
+                    'li[data-id="' + $('#nn_paymentmethod_id').val() + '"]'
+                ).length > 0) {
+
+                    showApplePayButton();
+                }
+            }
+
+
 });
 
 window.addEventListener('load', function() {
