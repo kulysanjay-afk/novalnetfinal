@@ -70,7 +70,6 @@ function iOS() {
   ].includes(navigator.platform)
   || navigator.userAgent.includes("Mac");
 }
-
 $(document).ready(function () {
 
     showApplePayButton();
@@ -102,6 +101,7 @@ jQuery('.fa-arrow-right').parent('button').show();
     location.reload();
 });
 
+         
 
      if (nnPaymentMethodKey === 'NOVALNET_APPLEPAY') {
 
@@ -123,6 +123,7 @@ jQuery('.fa-arrow-right').parent('button').show();
     });
 
 });
+
 
 $(document).ajaxComplete(function(event, xhr, settings) {
 
