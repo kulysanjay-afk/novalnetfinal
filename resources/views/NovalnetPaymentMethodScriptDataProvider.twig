@@ -87,6 +87,18 @@ document.addEventListener('billingAddressChanged', function () {
       Googlepaybutton = jQuery("#nn_google_pay").is(":visible")
 
       console.log(Googlepaybutton);
+const paymentContainer = document.querySelector(".payment-method-select");
+
+    const items = paymentContainer.querySelectorAll(".method-list-item");
+
+   
+
+    items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        console.log(text);
+
+    });
+
       if(Googlepaybutton){
 
 jQuery("#nn_google_pay").show();
