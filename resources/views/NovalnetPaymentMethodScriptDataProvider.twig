@@ -98,7 +98,7 @@ $(document).ajaxComplete(function(event, xhr, settings) {
 
           console.log('nn');
         const billingAddress = ceresStore.state.address.billingAddress;
-
+  console.log(billingAddress);
         if (!billingAddress) {
 
             var Googlepaybutton = jQuery("#nn_google_pay").is(":visible");
