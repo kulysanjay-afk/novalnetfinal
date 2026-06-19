@@ -96,6 +96,7 @@ $(document).ajaxComplete(function(event, xhr, settings) {
 
  if (settings.url.includes('/rest/io/customer/address/')) {
 
+          console.log('nn');
         const billingAddress = ceresStore.state.address.billingAddress;
 
         if (!billingAddress) {
