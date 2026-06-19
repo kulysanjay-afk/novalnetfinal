@@ -121,13 +121,7 @@ $(document).ajaxComplete(function(event, xhr, settings) {
     var nnPaymentMethodKey = $('#nn_paymentmethod_key').val();
 
      if (nnPaymentMethodKey === 'NOVALNET_APPLEPAY') {
-
-                if ($(mutation.target).find(
-                    'li[data-id="' + $('#nn_paymentmethod_id').val() + '"]'
-                ).length > 0) {
-
-                    showApplePayButton();
-                }
+                showApplePayButton();
             }
 
 
