@@ -84,13 +84,26 @@ document.addEventListener('billingAddressChanged', function () {
     const billingAddress = ceresStore.state.address.billingAddress;
     if (!billingAddress) {
 
-      Googlepaybutton = jQuery("#nn_google_pay").is(":visible")
+    
+document.querySelectorAll('.payment-method-select input[type="radio"]')
+    .forEach(input => {
 
-     const checkedMethod = document.querySelector(
-    '.payment-method-select input:checked'
-);
+        input.addEventListener('change', function () {
 
-        console.log(checkedMethod);
+            console.log(this); // checked input line print
+
+            const isGooglePay = this
+                .closest('li')
+                ?.querySelector('img[src*="novalnet_googlepay.png"]');
+
+            if (this.checked && isGooglePay) {
+                console.log('Novalnet Google Pay selected');
+            } else {
+                console.log('Other payment selected');
+            }
+        });
+
+    });
         
       if(novalnetGooglePaySelected){
 
