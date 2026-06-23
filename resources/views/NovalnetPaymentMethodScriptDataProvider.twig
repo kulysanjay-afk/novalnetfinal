@@ -78,52 +78,39 @@ $(document).ready(function () {
         mutations.forEach(function (mutation) {
 
             var nnPaymentMethodKey = $('#nn_paymentmethod_key').val();
-function handleGooglePayButton(input) {
 
-    console.log(input); // selected payment input
+document.addEventListener('billingAddressChanged', function () {
 
-    const isGooglePay = input
-        .closest('li')
-        ?.querySelector('img[src*="novalnet_googlepay.png"]');
+    const billingAddress = ceresStore.state.address.billingAddress;
+    if (!billingAddress) {
 
-    if (input.checked && isGooglePay) {
+document.querySelectorAll('.payment-method-select input[type="radio"]')
+    .forEach(input => {
 
-        console.log('Novalnet Google Pay selected');
+        input.addEventListener('change', function () {
 
-        jQuery("#nn_google_pay").show();
-        jQuery('.fa-arrow-right').parent('button').hide();
+            console.log(this); // checked input line print
 
-    } else {
+            const isGooglePay = this
+                .closest('li')
+                ?.querySelector('img[src*="novalnet_googlepay.png"]');
 
-        console.log('Other payment selected');
+            if (this.checked && isGooglePay) {
+                console.log('Novalnet Google Pay selected');
+                jQuery("#nn_google_pay").show();
+                jQuery('.fa-arrow-right').parent('button').hide();
+            } else {
+                jQuery("#nn_google_pay").hide();
+                jQuery('.fa-arrow-right').parent('button').show();
+                console.log('Other payment selected');
+            }
+        });
 
-        jQuery("#nn_google_pay").hide();
-        jQuery('.fa-arrow-right').parent('button').show();
+    });
+        return;
     }
-}
 
-// payment method change
-document.addEventListener('change', function (event) {
-
-    const input = event.target;
-
-    if (
-        input.matches('.payment-method-select input[type="radio"]')
-    ) {
-
-        const billingAddress =
-            ceresStore?.state?.address?.billingAddress;
-
-        // billing address empty/null
-        if (!billingAddress) {
-
-            handleGooglePayButton(input);
-            return;
-        }
-
-        // billing address available
-        location.reload();
-    }
+    location.reload();
 });
 
          
