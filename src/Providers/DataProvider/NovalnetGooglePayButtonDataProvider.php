@@ -77,37 +77,72 @@ class NovalnetGooglePayButtonDataProvider
             $article_details = [];
 
             $productNames = [];
-      $itemRepository = pluginApp(ItemRepositoryContract::class);
-
-if (!empty($basket->basketItems)) {
-
-    foreach ($basket->basketItems as $item) {
-
-        if (in_array(($item->itemType ?? 0), [1, 10])) {
-
-            try {
-
-                $itemData = $itemRepository->show(
-                    (int)$item->itemId
-                );
-
-                $productName = $itemData->texts[0]->name1 ?? '';
-
-                $productNames[] = !empty($productName)
-                    ? $productName
-                    : ('Item ID : ' . $item->itemId);
-
-            } catch (\Exception $e) {
-
-                $productNames[] = 'Item ID : ' . $item->itemId;
-
-                $this->getLogger(__METHOD__)->error('Item Error', [
-                    'message' => $e->getMessage()
-                ]);
+            $couponName   = '';
+            $shippingName = (string)($basket->shippingProfileId ?? '');
+            
+            $itemRepository = pluginApp(ItemRepositoryContract::class);
+            
+            if (!empty($basket->basketItems)) {
+            
+                foreach ($basket->basketItems as $item) {
+            
+                    // Product
+                    if (in_array(($item->itemType ?? 0), [1, 10])) {
+            
+                        $itemData = $itemRepository->show(
+                            (int)$item->itemId
+                        );
+            
+                        $productName = $itemData->texts[0]->name1 ?? '';
+            
+                        $productNames[] = !empty($productName)
+                            ? $productName
+                            : ('Item ID : ' . $item->itemId);
+                    }
+            
+                    // Coupon
+                    if (($item->itemType ?? 0) == 6) {
+            
+                        $couponName = 'Coupon Applied';
+                    }
+                }
             }
-        }
-    }
-}
+            
+            $this->getLogger(__METHOD__)->error('Basket Details', [
+                'products' => $productNames,
+                'coupon'   => $couponName,
+                'shipping' => $shippingName,
+            ]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             $article_details[] = array(
                 'label'  => 'Products',
