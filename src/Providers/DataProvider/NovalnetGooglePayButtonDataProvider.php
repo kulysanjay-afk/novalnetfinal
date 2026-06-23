@@ -76,66 +76,7 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details = [];
 
-            $productNames = [];
-            $couponName   = '';
-            $shippingName = '';
-            
-            $variationRepository = pluginApp(VariationRepositoryContract::class);
-            
-            // Basket items
-            if (!empty($basket->basketItems)) {
-            
-                foreach ($basket->basketItems as $item) {
-            
-                    $productName = '';
-            
-                    // Load variation
-                    if (!empty($item->variationId)) {
-            
-                        try {
-            
-                            $variation = $variationRepository->findById($item->variationId);
-            
-                            $productName = $variation->name ?? '';
-            
-                            $this->getLogger(__METHOD__)->error('Variation Data', [
-                                'variationId' => $item->variationId,
-                                'productName' => $productName
-                            ]);
-            
-                        } catch (\Exception $e) {
-            
-                            $this->getLogger(__METHOD__)->error('Variation Error', [
-                                'message' => $e->getMessage()
-                            ]);
-                        }
-                    }
-            
-                    // Product
-                    if (in_array(($item->itemType ?? 0), [1, 10])) {
-            
-                        if (!empty($productName)) {
-                            $productNames[] = $productName;
-                        }
-                    }
-            
-                    // Coupon
-                    if (($item->itemType ?? 0) == 6) {
-            
-                        $couponName = $productName;
-                    }
-                }
-            }
-            
-            // Shipping
-            $shippingName = (string)($basket->shippingProfileId ?? '');
-            
-            // Final log
-            $this->getLogger(__METHOD__)->error('Basket Details', [
-                'products' => $productNames,
-                'coupon'   => $couponName,
-                'shipping' => $shippingName,
-            ]);
+           
 
             $article_details[] = array(
                 'label'  => 'Products',
