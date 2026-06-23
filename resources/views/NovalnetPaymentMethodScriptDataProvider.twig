@@ -78,40 +78,52 @@ $(document).ready(function () {
         mutations.forEach(function (mutation) {
 
             var nnPaymentMethodKey = $('#nn_paymentmethod_key').val();
+function handleGooglePayButton(input) {
 
-document.addEventListener('billingAddressChanged', function () {
+    console.log(input); // selected payment input
 
-    const billingAddress = ceresStore.state.address.billingAddress;
-    if (!billingAddress) {
+    const isGooglePay = input
+        .closest('li')
+        ?.querySelector('img[src*="novalnet_googlepay.png"]');
 
-document.querySelectorAll('.payment-method-select input[type="radio"]')
-    .forEach(input => {
+    if (input.checked && isGooglePay) {
 
-        input.addEventListener('change', function () {
+        console.log('Novalnet Google Pay selected');
 
-            console.log(this); // checked input line print
+        jQuery("#nn_google_pay").show();
+        jQuery('.fa-arrow-right').parent('button').hide();
 
-            const isGooglePay = this
-                .closest('li')
-                ?.querySelector('img[src*="novalnet_googlepay.png"]');
+    } else {
 
-            if (this.checked && isGooglePay) {
-                console.log('Novalnet Google Pay selected');
-                jQuery("#nn_google_pay").show();
-                jQuery('.fa-arrow-right').parent('button').hide();
-            } else {
-                jQuery("#nn_google_pay").hide();
-                jQuery('.fa-arrow-right').parent('button').show();
-                console.log('Other payment selected');
-            }
-        });
+        console.log('Other payment selected');
 
-    });
-
-        return;
+        jQuery("#nn_google_pay").hide();
+        jQuery('.fa-arrow-right').parent('button').show();
     }
+}
 
-    location.reload();
+// payment method change
+document.addEventListener('change', function (event) {
+
+    const input = event.target;
+
+    if (
+        input.matches('.payment-method-select input[type="radio"]')
+    ) {
+
+        const billingAddress =
+            ceresStore?.state?.address?.billingAddress;
+
+        // billing address empty/null
+        if (!billingAddress) {
+
+            handleGooglePayButton(input);
+            return;
+        }
+
+        // billing address available
+        location.reload();
+    }
 });
 
          
