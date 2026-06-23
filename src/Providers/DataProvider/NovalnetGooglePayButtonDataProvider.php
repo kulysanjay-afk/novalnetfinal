@@ -76,38 +76,43 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details = [];
 
+            
             $productNames = [];
             $couponName   = '';
             $shippingName = '';
+            
+            $variationRepository = pluginApp(VariationRepositoryContract::class);
             
             // Basket items
             if (!empty($basket->basketItems)) {
             
                 foreach ($basket->basketItems as $item) {
             
-                    // Full debug
-                    $this->getLogger(__METHOD__)->error('Basket Item Full', [
-                        'item' => json_encode($item)
-                    ]);
-            
-                    // Product name
                     $productName = '';
             
-                    // Try different locations
-                    if (!empty($item->name)) {
+                    // Load variation
+                    if (!empty($item->variationId)) {
             
-                        $productName = $item->name;
+                        try {
             
-                    } elseif (!empty($item->variationData['texts']['name1'])) {
+                            $variation = $variationRepository->findById($item->variationId);
             
-                        $productName = $item->variationData['texts']['name1'];
+                            $productName = $variation->name ?? '';
             
-                    } elseif (!empty($item->variationData['item']['texts']['name1'])) {
+                            $this->getLogger(__METHOD__)->error('Variation Data', [
+                                'variationId' => $item->variationId,
+                                'productName' => $productName
+                            ]);
             
-                        $productName = $item->variationData['item']['texts']['name1'];
+                        } catch (\Exception $e) {
+            
+                            $this->getLogger(__METHOD__)->error('Variation Error', [
+                                'message' => $e->getMessage()
+                            ]);
+                        }
                     }
             
-                    // Product item types
+                    // Product
                     if (in_array(($item->itemType ?? 0), [1, 10])) {
             
                         if (!empty($productName)) {
@@ -115,7 +120,7 @@ class NovalnetGooglePayButtonDataProvider
                         }
                     }
             
-                    // Coupon item
+                    // Coupon
                     if (($item->itemType ?? 0) == 6) {
             
                         $couponName = $productName;
@@ -132,11 +137,6 @@ class NovalnetGooglePayButtonDataProvider
                 'coupon'   => $couponName,
                 'shipping' => $shippingName,
             ]);
-
-
-
-
-
 
 
 
