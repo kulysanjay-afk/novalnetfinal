@@ -90,18 +90,14 @@ document.querySelectorAll('.payment-method-select input[type="radio"]')
 
         input.addEventListener('change', function () {
 
-            console.log(this); // checked input line print
-
             const isGooglePay = this
                 .closest('li')
                 ?.querySelector('img[src*="novalnet_googlepay.png"]');
 
             if (this.checked && isGooglePay) {
-                console.log('Novalnet Google Pay selected');
                 jQuery("#nn_google_pay").show();
                 jQuery('.fa-arrow-right').parent('button').hide();
             } else {
-                console.log('Other payment selected');
                 jQuery("#nn_google_pay").hide();
                 jQuery('.fa-arrow-right').parent('button').show();
             }
