@@ -83,25 +83,12 @@ document.addEventListener('billingAddressChanged', function () {
 
     const billingAddress = ceresStore.state.address.billingAddress;
     if (!billingAddress) {
-       
+
       Googlepaybutton = jQuery("#nn_google_pay").is(":visible")
-
-      console.log(Googlepaybutton);
-const paymentContainer = document.querySelector(".payment-method-select");
-
-    const items = paymentContainer.querySelectorAll(".method-list-item");
-
-   
-
-    items.forEach(item => {
-        const text = item.innerText.toLowerCase();
-        console.log(text);
-
-    });
 
       if(Googlepaybutton){
 
-jQuery("#nn_google_pay").show();
+jQuery("#nn_google_pay")..hide();
 jQuery('.fa-arrow-right').parent('button').hide();
       }
       else{
@@ -139,31 +126,7 @@ jQuery('.fa-arrow-right').parent('button').show();
 });
 
 
-$(document).ajaxComplete(function(event, xhr, settings) {
 
-    if (
-        settings.url.includes('/rest/io/coupon/') ||
-        settings.url.includes('/rest/io/checkout/shippingId/')
-    ) {
-
-        if (!sessionStorage.getItem('nn_reload_done')) {
-
-            sessionStorage.setItem('nn_reload_done', '1');
-
-            setTimeout(function() {
-                location.reload();
-            }, 300);
-        }
-    }
-});
-
-window.addEventListener('load', function() {
-
-    setTimeout(function() {
-        sessionStorage.removeItem('nn_reload_done');
-    }, 2000);
-
-});
 </script>
 
 <form id="redirectPayment" method="post" action="{{redirectUrl}}">
