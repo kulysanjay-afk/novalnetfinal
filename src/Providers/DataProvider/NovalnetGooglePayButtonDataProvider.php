@@ -75,6 +75,7 @@ class NovalnetGooglePayButtonDataProvider
                 $orderAmount = (string) $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
             }
             $article_details = [];
+
             $productNames = [];
             $couponName   = '';
             $shippingName = '';
@@ -84,18 +85,40 @@ class NovalnetGooglePayButtonDataProvider
             
                 foreach ($basket->basketItems as $item) {
             
-                    $this->getLogger(__METHOD__)->error('Basket Item', [
-                        'item' => $item
+                    // Full debug
+                    $this->getLogger(__METHOD__)->error('Basket Item Full', [
+                        'item' => json_encode($item)
                     ]);
             
-                    // Product
-                    if (($item->itemType ?? 0) == 1) {
-                        $productNames[] = $item->name ?? '';
+                    // Product name
+                    $productName = '';
+            
+                    // Try different locations
+                    if (!empty($item->name)) {
+            
+                        $productName = $item->name;
+            
+                    } elseif (!empty($item->variationData['texts']['name1'])) {
+            
+                        $productName = $item->variationData['texts']['name1'];
+            
+                    } elseif (!empty($item->variationData['item']['texts']['name1'])) {
+            
+                        $productName = $item->variationData['item']['texts']['name1'];
                     }
             
-                    // Coupon
+                    // Product item types
+                    if (in_array(($item->itemType ?? 0), [1, 10])) {
+            
+                        if (!empty($productName)) {
+                            $productNames[] = $productName;
+                        }
+                    }
+            
+                    // Coupon item
                     if (($item->itemType ?? 0) == 6) {
-                        $couponName = $item->name ?? '';
+            
+                        $couponName = $productName;
                     }
                 }
             }
@@ -109,8 +132,19 @@ class NovalnetGooglePayButtonDataProvider
                 'coupon'   => $couponName,
                 'shipping' => $shippingName,
             ]);
-           
 
+
+
+
+
+
+
+
+
+
+
+            
+           
             $article_details[] = array(
                 'label'  => 'Products',
                 'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->itemSum),
