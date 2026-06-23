@@ -98,25 +98,18 @@ document.querySelectorAll('.payment-method-select input[type="radio"]')
 
             if (this.checked && isGooglePay) {
                 console.log('Novalnet Google Pay selected');
+                jQuery("#nn_google_pay").show();
+                jQuery('.fa-arrow-right').parent('button').hide();
             } else {
                 console.log('Other payment selected');
+                jQuery("#nn_google_pay").hide();
+                jQuery('.fa-arrow-right').parent('button').show();
             }
         });
 
     });
         
-      if(novalnetGooglePaySelected){
-
-
-
-jQuery("#nn_google_pay").show();
-jQuery('.fa-arrow-right').parent('button').hide();
-      }
-      else{
-jQuery("#nn_google_pay").hide();
-jQuery('.fa-arrow-right').parent('button').show();
-
-      }
+    
         return;
     }
 
