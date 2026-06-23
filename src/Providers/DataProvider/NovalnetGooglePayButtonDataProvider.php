@@ -16,9 +16,9 @@ use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
-// use Plenty\Modules\Order\Shipping\Profiles\Contracts\ShippingProfileRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
+
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -76,47 +76,7 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details = [];
 
-            // $productNames = [];
-            // $couponName   = '';
-            // $shippingName = '';
-            
-            // // Get product + coupon names
-            // if (!empty($basket->basketItems)) {
-            
-            //     foreach ($basket->basketItems as $item) {
-            
-            //         // Product items
-            //         if (($item->itemType ?? '') == 1) {
-            //             $productNames[] = $item->name;
-            //         }
-            
-            //         // Coupon item
-            //         if (($item->itemType ?? '') == 6) {
-            //             $couponName = $item->name;
-            //         }
-            //     }
-            // }
-            
-            // // Get shipping profile name
-            // if (!empty($basket->shippingProfileId)) {
-            
-            //     $shippingProfileRepository = pluginApp(
-            //         ShippingProfileRepositoryContract::class
-            //     );
-            
-            //     $shippingProfile = $shippingProfileRepository->findById(
-            //         $basket->shippingProfileId
-            //     );
-            
-            //     $shippingName = $shippingProfile->name ?? '';
-            // }
-            
-            // // Logger
-            // $this->getLogger(__METHOD__)->error('Basket Full Details', [
-            //     'products' => $productNames,
-            //     'coupon'   => $couponName,
-            //     'shipping' => $shippingName,
-            // ]);
+           
 
             $article_details[] = array(
                 'label'  => 'Products',
