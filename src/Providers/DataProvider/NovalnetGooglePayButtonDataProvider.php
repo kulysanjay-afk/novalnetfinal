@@ -18,7 +18,7 @@ use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFact
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
-
+use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -77,43 +77,37 @@ class NovalnetGooglePayButtonDataProvider
             $article_details = [];
 
             $productNames = [];
-            $couponName   = '';
-            $shippingName = (string)($basket->shippingProfileId ?? '');
-            
-            // Basket items
-            if (!empty($basket->basketItems)) {
-            
-                foreach ($basket->basketItems as $item) {
-            
-                    // Debug
-                    $this->getLogger(__METHOD__)->error('Basket Item', [
-                        'variationId' => $item->variationId ?? '',
-                        'itemId'      => $item->itemId ?? '',
-                        'itemType'    => $item->itemType ?? '',
-                    ]);
-            
-                    // Product items
-                    if (in_array(($item->itemType ?? 0), [1, 10])) {
-            
-                        $productNames[] =
-                            'Item ID : ' . ($item->itemId ?? '') .
-                            ' | Variation ID : ' . ($item->variationId ?? '');
-                    }
-            
-                    // Coupon
-                    if (($item->itemType ?? 0) == 6) {
-            
-                        $couponName = 'Coupon Applied';
-                    }
-                }
+      $itemRepository = pluginApp(ItemRepositoryContract::class);
+
+if (!empty($basket->basketItems)) {
+
+    foreach ($basket->basketItems as $item) {
+
+        if (in_array(($item->itemType ?? 0), [1, 10])) {
+
+            try {
+
+                $itemData = $itemRepository->show(
+                    (int)$item->itemId
+                );
+
+                $productName = $itemData->texts[0]->name1 ?? '';
+
+                $productNames[] = !empty($productName)
+                    ? $productName
+                    : ('Item ID : ' . $item->itemId);
+
+            } catch (\Exception $e) {
+
+                $productNames[] = 'Item ID : ' . $item->itemId;
+
+                $this->getLogger(__METHOD__)->error('Item Error', [
+                    'message' => $e->getMessage()
+                ]);
             }
-            
-            // Final log
-            $this->getLogger(__METHOD__)->error('Basket Details', [
-                'products' => $productNames,
-                'coupon'   => $couponName,
-                'shipping' => $shippingName,
-            ]);
+        }
+    }
+}
 
             $article_details[] = array(
                 'label'  => 'Products',
