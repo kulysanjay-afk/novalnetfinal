@@ -76,47 +76,47 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details = [];
 
-            $productNames = [];
-            $couponName   = '';
-            $shippingName = '';
+            // $productNames = [];
+            // $couponName   = '';
+            // $shippingName = '';
             
-            // Get product + coupon names
-            if (!empty($basket->basketItems)) {
+            // // Get product + coupon names
+            // if (!empty($basket->basketItems)) {
             
-                foreach ($basket->basketItems as $item) {
+            //     foreach ($basket->basketItems as $item) {
             
-                    // Product items
-                    if (($item->itemType ?? '') == 1) {
-                        $productNames[] = $item->name;
-                    }
+            //         // Product items
+            //         if (($item->itemType ?? '') == 1) {
+            //             $productNames[] = $item->name;
+            //         }
             
-                    // Coupon item
-                    if (($item->itemType ?? '') == 6) {
-                        $couponName = $item->name;
-                    }
-                }
-            }
+            //         // Coupon item
+            //         if (($item->itemType ?? '') == 6) {
+            //             $couponName = $item->name;
+            //         }
+            //     }
+            // }
             
-            // Get shipping profile name
-            if (!empty($basket->shippingProfileId)) {
+            // // Get shipping profile name
+            // if (!empty($basket->shippingProfileId)) {
             
-                $shippingProfileRepository = pluginApp(
-                    ShippingProfileRepositoryContract::class
-                );
+            //     $shippingProfileRepository = pluginApp(
+            //         ShippingProfileRepositoryContract::class
+            //     );
             
-                $shippingProfile = $shippingProfileRepository->findById(
-                    $basket->shippingProfileId
-                );
+            //     $shippingProfile = $shippingProfileRepository->findById(
+            //         $basket->shippingProfileId
+            //     );
             
-                $shippingName = $shippingProfile->name ?? '';
-            }
+            //     $shippingName = $shippingProfile->name ?? '';
+            // }
             
-            // Logger
-            $this->getLogger(__METHOD__)->error('Basket Full Details', [
-                'products' => $productNames,
-                'coupon'   => $couponName,
-                'shipping' => $shippingName,
-            ]);
+            // // Logger
+            // $this->getLogger(__METHOD__)->error('Basket Full Details', [
+            //     'products' => $productNames,
+            //     'coupon'   => $couponName,
+            //     'shipping' => $shippingName,
+            // ]);
 
             $article_details[] = array(
                 'label'  => 'Products',
