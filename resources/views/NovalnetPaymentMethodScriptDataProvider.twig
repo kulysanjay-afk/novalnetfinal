@@ -96,13 +96,13 @@ document.querySelectorAll('.payment-method-select input[type="radio"]')
                 ?.querySelector('img[src*="novalnet_googlepay.png"]');
 
             if (this.checked && isGooglePay) {
-                console.log('Novalnet Google Pay selected');
+               
                 jQuery("#nn_google_pay").show();
                 jQuery('.fa-arrow-right').parent('button').hide();
             } else {
                 jQuery("#nn_google_pay").hide();
                 jQuery('.fa-arrow-right').parent('button').show();
-                console.log('Other payment selected');
+                
             }
         });
 
