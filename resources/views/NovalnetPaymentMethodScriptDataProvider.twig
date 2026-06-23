@@ -86,11 +86,11 @@ document.addEventListener('billingAddressChanged', function () {
 
       Googlepaybutton = jQuery("#nn_google_pay").is(":visible")
 
-      const googlePayExists = document.querySelector(
-    '.payment-method-select input[value="googlepay"]');
-
-     console.log(googlePayExists);
-      if(googlePayExists){
+    const novalnetGooglePay = document.querySelector(
+    '.payment-method-select img[src*="novalnet_googlepay.png"]'
+);
+     console.log( novalnetGooglePay);
+      if(novalnetGooglePay){
 
 
 
