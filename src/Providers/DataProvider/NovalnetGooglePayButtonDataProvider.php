@@ -18,7 +18,8 @@ use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFact
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
-
+use Plenty\Modules\Item\Variation\Contracts\VariationDataInterfaceContract;
+use Plenty\Modules\Item\Variation\Models\Variation;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -53,11 +54,45 @@ class NovalnetGooglePayButtonDataProvider
         $settingsService    = pluginApp(SettingsService::class);
 
 
-        $this->getLogger(__METHOD__)->error('checklinetem', [
-            '$nnn' => $basket ,
-                                        
-        ]);
+        $productNames = [];
 
+$variationDataInterface = pluginApp(
+    VariationDataInterfaceContract::class
+);
+
+if (!empty($basket->basketItems)) {
+
+    foreach ($basket->basketItems as $item) {
+
+        if (in_array(($item->itemType ?? 0), [1, 10])) {
+
+            try {
+
+                $variationData = $variationDataInterface->getVariationDataById(
+                    $item->variationId
+                );
+
+                $productName = $variationData['texts']['name1'] ?? '';
+
+                if (!empty($productName)) {
+
+                    $productNames[] = $productName;
+                }
+
+                $this->getLogger(__METHOD__)->error('Product Name', [
+                    'variationId' => $item->variationId,
+                    'productName' => $productName,
+                ]);
+
+            } catch (\Exception $e) {
+
+                $this->getLogger(__METHOD__)->error('Variation Error', [
+                    'message' => $e->getMessage()
+                ]);
+            }
+        }
+    }
+}
 
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
             if(!empty($basket->basketAmount)) {
