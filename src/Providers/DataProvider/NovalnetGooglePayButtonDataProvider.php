@@ -122,7 +122,31 @@ class NovalnetGooglePayButtonDataProvider
                 $shippingName = $shippingProfile->name ?? '';
             }
 
+
+            if (!empty($basket->basketItems)) {
+
+                foreach ($basket->basketItems as $item) {
             
+                    // Coupon item type
+                    if (($item->itemType ?? 0) == 6) {
+            
+                        $couponName = $item->name ?? '';
+            
+                        // Fallback
+                        if (empty($couponName)) {
+            
+                            $couponName =
+                                'Coupon Item ID : ' . ($item->itemId ?? '');
+                        }
+                    }
+                }
+            }
+
+            $this->getLogger(__METHOD__)->error('Coupon Item', [
+                'couponItem' => json_encode($item)
+            ]);
+
+
             $this->getLogger(__METHOD__)->error('Basket Details', [
                 'products' => $productNames,
                 'coupon'   => $couponName,
