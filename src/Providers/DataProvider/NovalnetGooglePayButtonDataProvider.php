@@ -19,7 +19,6 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
-use Plenty\Modules\Order\Shipping\Profiles\Contracts\ShippingProfileRepositoryContract;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -101,27 +100,9 @@ class NovalnetGooglePayButtonDataProvider
                             : ('Item ID : ' . $item->itemId);
                     }
             
-                    // Coupon
-                    if (($item->itemType ?? 0) == 6) {
-            
-                        $couponName = 'Coupon Applied';
-                    }
+                    
                 }
             }
-
-            if (!empty($basket->shippingProfileId)) {
-
-                $shippingProfileRepository = pluginApp(
-                    ShippingProfileRepositoryContract::class
-                );
-            
-                $shippingProfile = $shippingProfileRepository->findById(
-                    (int)$basket->shippingProfileId
-                );
-            
-                $shippingName = $shippingProfile->name ?? '';
-            }
-
 
             if (!empty($basket->basketItems)) {
 
