@@ -75,7 +75,40 @@ class NovalnetGooglePayButtonDataProvider
                 $orderAmount = (string) $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
             }
             $article_details = [];
-
+            $productNames = [];
+            $couponName   = '';
+            $shippingName = '';
+            
+            // Basket items
+            if (!empty($basket->basketItems)) {
+            
+                foreach ($basket->basketItems as $item) {
+            
+                    $this->getLogger(__METHOD__)->error('Basket Item', [
+                        'item' => $item
+                    ]);
+            
+                    // Product
+                    if (($item->itemType ?? 0) == 1) {
+                        $productNames[] = $item->name ?? '';
+                    }
+            
+                    // Coupon
+                    if (($item->itemType ?? 0) == 6) {
+                        $couponName = $item->name ?? '';
+                    }
+                }
+            }
+            
+            // Shipping
+            $shippingName = (string)($basket->shippingProfileId ?? '');
+            
+            // Final log
+            $this->getLogger(__METHOD__)->error('Basket Details', [
+                'products' => $productNames,
+                'coupon'   => $couponName,
+                'shipping' => $shippingName,
+            ]);
            
 
             $article_details[] = array(
