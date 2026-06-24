@@ -19,6 +19,7 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
+use Plenty\Modules\Order\Shipping\Contracts\ShippingProfileRepositoryContract;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -75,6 +76,29 @@ class NovalnetGooglePayButtonDataProvider
                 $orderAmount = (string) $paymentHelper->convertAmountToSmallerUnit($basket->basketAmount);
             }
             $article_details = [];
+
+
+            $shippingName = 'Shipping';
+
+            $shippingProfileRepository = pluginApp(
+                ShippingProfileRepositoryContract::class
+            );
+            
+            $shippingProfiles =
+                $shippingProfileRepository->all();
+            
+            foreach ($shippingProfiles as $profile) {
+            
+                if ($profile->id == $basket->shippingProfileId) {
+            
+                    $shippingName = $profile->name;
+                    break;
+                }
+            }
+
+
+
+
 
             $itemRepository = pluginApp(ItemRepositoryContract::class);
 
