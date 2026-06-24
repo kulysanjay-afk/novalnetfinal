@@ -19,7 +19,6 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
-use Plenty\Modules\Order\Shipping\Profiles\Contracts\ShippingProfileRepositoryContract;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -45,7 +44,6 @@ class NovalnetGooglePayButtonDataProvider
                          BasketRepositoryContract $basketRepository,
                          CountryRepositoryContract $countryRepository,
                          WebstoreHelper $webstoreHelper,
-                         ShippingProfileRepositoryContract $shippingProfileRepository,
                          $arg)
     {
         $basket             = $basketRepository->load();
@@ -59,51 +57,6 @@ class NovalnetGooglePayButtonDataProvider
             '$nnn' => $basket ,
                                         
         ]);
-
-        $shippingName = 'Shipping';
-
-        if (!empty($basket->shippingProfileId)) {
-        
-            $shippingProfile = $shippingProfileRepository->findById(
-                (int)$basket->shippingProfileId
-            );
-        
-            if (!empty($shippingProfile)) {
-        
-                $shippingData = json_decode(
-                    json_encode($shippingProfile),
-                    true
-                );
-        
-                $this->getLogger(__METHOD__)->error(
-                    'Shipping Profile Data',
-                    [
-                        'data' => $shippingData
-                    ]
-                );
-        
-                // Different plentymarket versions
-                if (!empty($shippingData['name'])) {
-        
-                    $shippingName =
-                        $shippingData['name'];
-        
-                } elseif (!empty($shippingData['names'][0]['name'])) {
-        
-                    $shippingName =
-                        $shippingData['names'][0]['name'];
-        
-                } elseif (!empty($shippingData['parcelServicePresetName'])) {
-        
-                    $shippingName =
-                        $shippingData['parcelServicePresetName'];
-                }
-            }
-        }
-        
-       
-        
-      
 
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
             if(!empty($basket->basketAmount)) {
