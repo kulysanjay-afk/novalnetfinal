@@ -128,13 +128,14 @@ class NovalnetGooglePayButtonDataProvider
                         $basket->couponCode . ')',
 
                     'amount' => (string)$paymentHelper
-                        ->convertAmountToSmallerUnit(
-                            abs($basket->couponDiscount)
-                        ),
+                    ->convertAmountToSmallerUnit(
+                        $basket->couponDiscount
+                    ),
 
                     'type'   => 'SUBTOTAL',
                 );
             }
+            
 
             $articleDetailsJson = json_encode($article_details);
                         
