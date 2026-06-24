@@ -125,6 +125,17 @@ switch ((int)$basket->shippingProfileId) {
         break;
 }
 
+$this->getLogger(__METHOD__)->error('Class Check', [
+    'shippingClass1' => class_exists(
+        'Plenty\Modules\Order\Shipping\Contracts\ShippingProfileRepositoryContract'
+    ),
+
+    'shippingClass2' => class_exists(
+        'Plenty\Modules\Order\Shipping\Profiles\Contracts\ShippingProfileRepositoryContract'
+    ),
+]);
+
+
             // Shipping
             if ($basket->shippingAmount > 0) {
 
