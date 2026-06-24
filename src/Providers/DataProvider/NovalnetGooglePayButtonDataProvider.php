@@ -45,6 +45,7 @@ class NovalnetGooglePayButtonDataProvider
                          BasketRepositoryContract $basketRepository,
                          CountryRepositoryContract $countryRepository,
                          WebstoreHelper $webstoreHelper,
+                         ShippingProfileRepositoryContract $shippingProfileRepository,
                          $arg)
     {
         $basket             = $basketRepository->load();
@@ -59,27 +60,27 @@ class NovalnetGooglePayButtonDataProvider
                                         
         ]);
 
+
+
         $shippingName = 'Shipping';
 
-        $shippingProfileRepository = pluginApp(
-            ShippingProfileRepositoryContract::class
-        );
-        
-        $this->getLogger(__METHOD__)->error('Before FindById');
-        
         $shippingProfile = $shippingProfileRepository->findById(
             (int)$basket->shippingProfileId
         );
-        
-        $this->getLogger(__METHOD__)->error('After FindById', [
-            'profile' => json_encode($shippingProfile)
-        ]);
         
         $shippingName =
             $shippingProfile->name ?? 'Shipping';
 
 
 
+
+      
+        
+        $this->getLogger(__METHOD__)->error('After FindById', [
+            'profile' => $shippingName,
+        ]);
+        
+    
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
             if(!empty($basket->basketAmount)) {
                 $orderAmount = 0;
