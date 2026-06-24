@@ -19,8 +19,8 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
-use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
-use Plenty\Plugin\Http\Client;
+use Plenty\Modules\Order\Shipping\ParcelService\Models\ParcelServicePreset;
+use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContract;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -62,37 +62,29 @@ class NovalnetGooglePayButtonDataProvider
 
         $shippingName = 'Shipping';
 
-        $client = pluginApp(Client::class);
-        
-        $response = $client->request(
-            'GET',
-            '/rest/orders/shipping/profiles/' .
-            (int)$basket->shippingProfileId
-        );
-        
-        $shippingData = json_decode(
-            $response->getBody()->getContents(),
-            true
-        );
-        
-        $this->getLogger(__METHOD__)->error(
-            'Shipping REST',
-            [
-                'data' => $shippingData
-            ]
-        );
-        
-        if (!empty($shippingData['name'])) {
-        
-            $shippingName =
-                $shippingData['name'];
-        
-        } elseif (!empty($shippingData['names'][0]['name'])) {
-        
-            $shippingName =
-                $shippingData['names'][0]['name'];
-        }
-     
+/** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepository */
+$parcelServicePresetRepository = pluginApp(
+    ParcelServicePresetRepositoryContract::class
+);
+
+/** @var ParcelServicePreset $parcelServicePreset */
+$parcelServicePreset =
+    $parcelServicePresetRepository->getPresetById(
+        (int)$basket->shippingProfileId
+    );
+
+$this->getLogger(__METHOD__)->error(
+    'ShippingPreset',
+    [
+        'data' => json_encode($parcelServicePreset)
+    ]
+);
+
+if (!empty($parcelServicePreset->name)) {
+
+    $shippingName =
+        $parcelServicePreset->name;
+}
 
         $this->getLogger(__METHOD__)->error(
             'Shipping data',
