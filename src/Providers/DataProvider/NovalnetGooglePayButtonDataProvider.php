@@ -54,14 +54,6 @@ class NovalnetGooglePayButtonDataProvider
         $paymentService     = pluginApp(PaymentService::class);
         $settingsService    = pluginApp(SettingsService::class);
 
-
-        $this->getLogger(__METHOD__)->error('checklinetem', [
-            '$nnn' => $basket ,
-                                        
-        ]);
-
-        $shippingName = 'Shipping';
-
         /** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepository */
         $parcelServicePresetRepository = pluginApp(
             ParcelServicePresetRepositoryContract::class
@@ -72,46 +64,27 @@ class NovalnetGooglePayButtonDataProvider
                 (int)$basket->shippingProfileId
             );
         
-        $shippingData = json_decode(
-            json_encode($parcelServicePreset),
-            true
-        );
-        
-        $this->getLogger(__METHOD__)->error(
-            'ShippingPreset',
-            [
-                'data' => $shippingData
-            ]
-        );
-        
-        
-        $shippingName = 'Shipping';
+            if (
+                !empty($parcelServicePreset->parcelServiceNames)
+                && !empty($parcelServicePreset->parcelServiceNames[0]->name)
+            ) {
 
-if (
-    !empty($parcelServicePreset->parcelServiceNames)
-    && !empty($parcelServicePreset->parcelServiceNames[0]->name)
-) {
+                $shippingName =
+                    $parcelServicePreset
+                        ->parcelServiceNames[0]
+                        ->name;
 
-    $shippingName =
-        $parcelServicePreset
-            ->parcelServiceNames[0]
-            ->name;
+            } elseif (
+                !empty($parcelServicePreset->parcelServicePresetNames)
+                && !empty($parcelServicePreset->parcelServicePresetNames[0]->name)
+            ) {
 
-} elseif (
-    !empty($parcelServicePreset->parcelServicePresetNames)
-    && !empty($parcelServicePreset->parcelServicePresetNames[0]->name)
-) {
-
-    $shippingName =
-        $parcelServicePreset
-            ->parcelServicePresetNames[0]
-            ->name;
-}
-        $this->getLogger(__METHOD__)->error(
-            'Shipping data',
-            [
-                'data1' =>  $shippingName
-            ]);
+                $shippingName =
+                    $parcelServicePreset
+                        ->parcelServicePresetNames[0]
+                        ->name;
+            }
+                    
 
 
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
@@ -166,7 +139,7 @@ if (
             if ($basket->shippingAmount > 0) {
 
                 $article_details[] = array(
-                    'label'  => 'Shipping',
+                    'label'  => $shippingName,
                     'amount' => (string)$paymentHelper
                         ->convertAmountToSmallerUnit(
                             $basket->shippingAmount
