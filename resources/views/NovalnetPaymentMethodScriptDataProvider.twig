@@ -136,7 +136,11 @@ document.querySelectorAll('.payment-method-select input[type="radio"]')
 
 });
 
-
+$(document).ajaxSend(function(event, jqXHR, settings) {
+    console.log('AJAX URL =>', settings.url);
+    console.log('METHOD =>', settings.type);
+    console.log('DATA =>', settings.data);
+});
 
 </script>
 
