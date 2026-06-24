@@ -58,6 +58,52 @@ class NovalnetGooglePayButtonDataProvider
                                         
         ]);
 
+
+        $shippingName = 'Shipping';
+
+        if (!empty($basket->shippingProfileId)) {
+        
+            $url =
+                'https://' .
+                $_SERVER['HTTP_HOST'] .
+                '/rest/orders/shipping/profiles/' .
+                (int)$basket->shippingProfileId;
+        
+            $response = file_get_contents($url);
+        
+            $shippingData = json_decode(
+                $response,
+                true
+            );
+        
+            $this->getLogger(__METHOD__)->error(
+                'Shipping REST',
+                [
+                    'data' => $shippingData
+                ]
+            );
+        
+            if (!empty($shippingData['name'])) {
+        
+                $shippingName =
+                    $shippingData['name'];
+        
+            } elseif (!empty($shippingData['names'][0]['name'])) {
+        
+                $shippingName =
+                    $shippingData['names'][0]['name'];
+            }
+        }
+
+
+        $this->getLogger(__METHOD__)->error(
+            'Shipping data',
+            [
+                'data1' =>  $shippingName
+            ]
+        );
+
+
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
             if(!empty($basket->basketAmount)) {
                 $orderAmount = 0;
