@@ -77,29 +77,6 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details = [];
 
-
-            $shippingName = 'Shipping';
-
-            $shippingProfileRepository = pluginApp(
-                ShippingProfileRepositoryContract::class
-            );
-            
-            $shippingProfiles =
-                $shippingProfileRepository->all();
-            
-            foreach ($shippingProfiles as $profile) {
-            
-                if ($profile->id == $basket->shippingProfileId) {
-            
-                    $shippingName = $profile->name;
-                    break;
-                }
-            }
-
-
-
-
-
             $itemRepository = pluginApp(ItemRepositoryContract::class);
 
             if (!empty($basket->basketItems)) {
@@ -135,7 +112,7 @@ class NovalnetGooglePayButtonDataProvider
             if ($basket->shippingAmount > 0) {
 
                 $article_details[] = array(
-                    'label'  => $shippingName,
+                    'label'  => 'shipping',
                     'amount' => (string)$paymentHelper
                         ->convertAmountToSmallerUnit(
                             $basket->shippingAmount
