@@ -142,28 +142,6 @@ class NovalnetGooglePayButtonDataProvider
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             $article_details[] = array(
                 'label'  => 'Products',
                 'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->itemSum),
