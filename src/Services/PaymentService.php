@@ -776,11 +776,7 @@ public function allowedCountries(Basket $basket, $allowedCountry): bool
         if($this->settingsService->getPaymentSettingsValue('payment_action', $paymentResponseData['payment_method']) && $this->settingsService->getPaymentSettingsValue('payment_action', $paymentResponseData['payment_method']) == '2') {
             $additionalInfo['zero_amount'] = '1';
         }
-
-
-        $this->getLogger(__METHOD__)->error('getprocessPayment', [
-            '$path' => $additionalInfo,                              
-        ]);
+        
         return json_encode($additionalInfo);
     }
 
