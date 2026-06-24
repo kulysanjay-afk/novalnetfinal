@@ -58,33 +58,60 @@ class NovalnetGooglePayButtonDataProvider
         $parcelServicePresetRepository = pluginApp(
             ParcelServicePresetRepositoryContract::class
         );
-        
+        $shippingName = 'Shipping';
         $parcelServicePreset =
             $parcelServicePresetRepository->getPresetById(
                 (int)$basket->shippingProfileId
             );
         
-            if (
-                !empty($parcelServicePreset->parcelServiceNames)
-                && !empty($parcelServicePreset->parcelServiceNames[0]->name)
-            ) {
-
-                $shippingName =
-                    $parcelServicePreset
-                        ->parcelServiceNames[0]
-                        ->name;
-
-            } elseif (
-                !empty($parcelServicePreset->parcelServicePresetNames)
-                && !empty($parcelServicePreset->parcelServicePresetNames[0]->name)
-            ) {
-
-                $shippingName =
-                    $parcelServicePreset
-                        ->parcelServicePresetNames[0]
-                        ->name;
+            $this->getLogger(__METHOD__)->error(
+                'ShippingPreset',
+                [
+                    'data' => $parcelServicePreset
+                ]
+            );
+            
+            if (!empty($parcelServicePreset)) {
+            
+                // Pickup / custom shipping
+                if (!empty($parcelServicePreset->backendName)) {
+            
+                    $shippingName =
+                        $parcelServicePreset->backendName;
+                }
+            
+                // DHL / Hermes / DPD etc
+                if (
+                    !empty($parcelServicePreset->parcelServiceNames)
+                    && !empty($parcelServicePreset->parcelServiceNames[0]->name)
+                ) {
+            
+                    $shippingName =
+                        $parcelServicePreset
+                            ->parcelServiceNames[0]
+                            ->name;
+                }
+            
+                // Standard package names
+                elseif (
+                    !empty($parcelServicePreset->parcelServicePresetNames)
+                    && !empty($parcelServicePreset->parcelServicePresetNames[0]->name)
+                ) {
+            
+                    $shippingName =
+                        $parcelServicePreset
+                            ->parcelServicePresetNames[0]
+                            ->name;
+                }
             }
-                    
+            
+            $this->getLogger(__METHOD__)->error(
+                'FinalShippingName',
+                [
+                    'name' => $shippingName,
+                    'shippingProfileId' => $basket->shippingProfileId
+                ]
+            );    
 
 
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
