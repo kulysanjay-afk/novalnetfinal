@@ -136,7 +136,7 @@ class NovalnetGooglePayButtonDataProvider
             }
 
             // Shipping
-            if ($basket->shippingAmount > 0) {
+            if ($basket->shippingAmount) {
 
                 $article_details[] = array(
                     'label'  => $shippingName,
