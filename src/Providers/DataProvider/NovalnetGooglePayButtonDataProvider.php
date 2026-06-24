@@ -136,8 +136,6 @@ class NovalnetGooglePayButtonDataProvider
             }
 
             // Shipping
-            if ($basket->shippingAmount) {
-
                 $article_details[] = array(
                     'label'  => $shippingName,
                     'amount' => (string)$paymentHelper
@@ -146,8 +144,7 @@ class NovalnetGooglePayButtonDataProvider
                         ),
                     'type'   => 'SUBTOTAL',
                 );
-            }
-
+        
             // Discount
             if ($basket->couponDiscount < 0) {
 
