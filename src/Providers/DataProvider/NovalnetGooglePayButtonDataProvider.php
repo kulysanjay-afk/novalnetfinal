@@ -84,11 +84,29 @@ class NovalnetGooglePayButtonDataProvider
             ]
         );
         
-        $shippingName =
-            $shippingData['parcelServiceNames'][0]['name']
-            ?? $shippingData['parcelServicePresetNames'][0]['name']
-            ?? 'Shipping';
+        
+        $shippingName = 'Shipping';
 
+if (
+    !empty($parcelServicePreset->parcelServiceNames)
+    && !empty($parcelServicePreset->parcelServiceNames[0]->name)
+) {
+
+    $shippingName =
+        $parcelServicePreset
+            ->parcelServiceNames[0]
+            ->name;
+
+} elseif (
+    !empty($parcelServicePreset->parcelServicePresetNames)
+    && !empty($parcelServicePreset->parcelServicePresetNames[0]->name)
+) {
+
+    $shippingName =
+        $parcelServicePreset
+            ->parcelServicePresetNames[0]
+            ->name;
+}
         $this->getLogger(__METHOD__)->error(
             'Shipping data',
             [
