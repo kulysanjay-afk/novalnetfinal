@@ -19,6 +19,7 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
+use Plenty\Plugin\Http\Request;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -61,39 +62,36 @@ class NovalnetGooglePayButtonDataProvider
 
         $shippingName = 'Shipping';
 
-        if (!empty($basket->shippingProfileId)) {
-        
-            $url =
-                'https://' .
-                $_SERVER['HTTP_HOST'] .
-                '/rest/orders/shipping/profiles/' .
-                (int)$basket->shippingProfileId;
-        
-            $response = file_get_contents($url);
-        
-            $shippingData = json_decode(
-                $response,
-                true
-            );
-        
-            $this->getLogger(__METHOD__)->error(
-                'Shipping REST',
-                [
-                    'data' => $shippingData
-                ]
-            );
-        
-            if (!empty($shippingData['name'])) {
-        
-                $shippingName =
-                    $shippingData['name'];
-        
-            } elseif (!empty($shippingData['names'][0]['name'])) {
-        
-                $shippingName =
-                    $shippingData['names'][0]['name'];
-            }
-        }
+if (!empty($basket->shippingProfileId)) {
+
+    $response = $request->get(
+        '/rest/orders/shipping/profiles/' .
+        (int)$basket->shippingProfileId
+    );
+
+    $shippingData = json_decode(
+        $response->getContent(),
+        true
+    );
+
+    $this->getLogger(__METHOD__)->error(
+        'Shipping REST',
+        [
+            'data' => $shippingData
+        ]
+    );
+
+    if (!empty($shippingData['name'])) {
+
+        $shippingName =
+            $shippingData['name'];
+
+    } elseif (!empty($shippingData['names'][0]['name'])) {
+
+        $shippingName =
+            $shippingData['names'][0]['name'];
+    }
+}
 
 
         $this->getLogger(__METHOD__)->error(
