@@ -63,24 +63,13 @@ class NovalnetGooglePayButtonDataProvider
             $parcelServicePresetRepository->getPresetById(
                 (int)$basket->shippingProfileId
             );
-        
-            $this->getLogger(__METHOD__)->error(
-                'ShippingPreset',
-                [
-                    'data' => $parcelServicePreset
-                ]
-            );
-            
             if (!empty($parcelServicePreset)) {
-            
-                // Pickup / custom shipping
                 if (!empty($parcelServicePreset->backendName)) {
             
                     $shippingName =
                         $parcelServicePreset->backendName;
                 }
-            
-                // DHL / Hermes / DPD etc
+
                 if (
                     !empty($parcelServicePreset->parcelServiceNames)
                     && !empty($parcelServicePreset->parcelServiceNames[0]->name)
@@ -91,8 +80,6 @@ class NovalnetGooglePayButtonDataProvider
                             ->parcelServiceNames[0]
                             ->name;
                 }
-            
-                // Standard package names
                 elseif (
                     !empty($parcelServicePreset->parcelServicePresetNames)
                     && !empty($parcelServicePreset->parcelServicePresetNames[0]->name)
@@ -105,15 +92,6 @@ class NovalnetGooglePayButtonDataProvider
                 }
             }
             
-            $this->getLogger(__METHOD__)->error(
-                'FinalShippingName',
-                [
-                    'name' => $shippingName,
-                    'shippingProfileId' => $basket->shippingProfileId
-                ]
-            );    
-
-
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
             if(!empty($basket->basketAmount)) {
                 $orderAmount = 0;
