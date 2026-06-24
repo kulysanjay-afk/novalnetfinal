@@ -62,15 +62,11 @@ class NovalnetGooglePayButtonDataProvider
 
 
 
-        $shippingName = 'Shipping';
-
         $shippingProfile = $shippingProfileRepository->findById(
             (int)$basket->shippingProfileId
         );
         
-        $shippingName =
-            $shippingProfile->name ?? 'Shipping';
-
+        $shippingName = $shippingProfile->names[0]->name ?? 'Shipping';
 
 
 
