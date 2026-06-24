@@ -77,9 +77,8 @@ if (!empty($basket->shippingProfileId)) {
     $this->getLogger(__METHOD__)->error(
         'Shipping REST',
         [
-            'data' => $shippingData
-        ]
-    );
+            'data' => $shippingData,
+        ]);
 
     if (!empty($shippingData['name'])) {
 
@@ -98,8 +97,7 @@ if (!empty($basket->shippingProfileId)) {
             'Shipping data',
             [
                 'data1' =>  $shippingName
-            ]
-        );
+            ]);
 
 
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
