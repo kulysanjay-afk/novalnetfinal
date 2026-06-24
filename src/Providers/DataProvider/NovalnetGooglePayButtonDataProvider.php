@@ -60,23 +60,51 @@ class NovalnetGooglePayButtonDataProvider
                                         
         ]);
 
+        $shippingName = 'Shipping';
 
-
-        $shippingProfile = $shippingProfileRepository->findById(
-            (int)$basket->shippingProfileId
-        );
+        if (!empty($basket->shippingProfileId)) {
         
-        $shippingName = $shippingProfile->names[0]->name ?? 'Shipping';
-
-
-
+            $shippingProfile = $shippingProfileRepository->findById(
+                (int)$basket->shippingProfileId
+            );
+        
+            if (!empty($shippingProfile)) {
+        
+                $shippingData = json_decode(
+                    json_encode($shippingProfile),
+                    true
+                );
+        
+                $this->getLogger(__METHOD__)->error(
+                    'Shipping Profile Data',
+                    [
+                        'data' => $shippingData
+                    ]
+                );
+        
+                // Different plentymarket versions
+                if (!empty($shippingData['name'])) {
+        
+                    $shippingName =
+                        $shippingData['name'];
+        
+                } elseif (!empty($shippingData['names'][0]['name'])) {
+        
+                    $shippingName =
+                        $shippingData['names'][0]['name'];
+        
+                } elseif (!empty($shippingData['parcelServicePresetName'])) {
+        
+                    $shippingName =
+                        $shippingData['parcelServicePresetName'];
+                }
+            }
+        }
+        
+       
+        
       
-        
-        $this->getLogger(__METHOD__)->error('After FindById', [
-            'profile' => $shippingName,
-        ]);
-        
-    
+
         if($settingsService->getPaymentSettingsValue('payment_active', 'novalnet_googlepay') == true) {
             if(!empty($basket->basketAmount)) {
                 $orderAmount = 0;
