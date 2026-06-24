@@ -19,7 +19,6 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
-use Plenty\Modules\Order\Shipping\Contracts\ShippingProfileRepositoryContract;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
