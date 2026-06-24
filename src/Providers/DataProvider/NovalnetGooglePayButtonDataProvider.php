@@ -106,10 +106,6 @@ class NovalnetGooglePayButtonDataProvider
                 }
             }
 
-      
-            
-
-           
             // Shipping
             if ($basket->shippingAmount > 0) {
 
@@ -138,7 +134,6 @@ class NovalnetGooglePayButtonDataProvider
                     'type'   => 'SUBTOTAL',
                 );
             }
-            
 
             $articleDetailsJson = json_encode($article_details);
                         
