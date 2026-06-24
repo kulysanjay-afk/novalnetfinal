@@ -135,7 +135,7 @@ class NovalnetGooglePayButtonDataProvider
             if ($basket->shippingAmount > 0) {
 
                 $article_details[] = array(
-                    'label'  => 'Shipping',
+                    'label'  => $shippingName,
                     'amount' => (string)$paymentHelper
                         ->convertAmountToSmallerUnit(
                             $basket->shippingAmount
