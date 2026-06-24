@@ -62,29 +62,32 @@ class NovalnetGooglePayButtonDataProvider
 
         $shippingName = 'Shipping';
 
-/** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepository */
-$parcelServicePresetRepository = pluginApp(
-    ParcelServicePresetRepositoryContract::class
-);
-
-/** @var ParcelServicePreset $parcelServicePreset */
-$parcelServicePreset =
-    $parcelServicePresetRepository->getPresetById(
-        (int)$basket->shippingProfileId
-    );
-
-$this->getLogger(__METHOD__)->error(
-    'ShippingPreset',
-    [
-        'data' => json_encode($parcelServicePreset)
-    ]
-);
-
-if (!empty($parcelServicePreset->name)) {
-
-    $shippingName =
-        $parcelServicePreset->name;
-}
+        /** @var ParcelServicePresetRepositoryContract $parcelServicePresetRepository */
+        $parcelServicePresetRepository = pluginApp(
+            ParcelServicePresetRepositoryContract::class
+        );
+        
+        $parcelServicePreset =
+            $parcelServicePresetRepository->getPresetById(
+                (int)$basket->shippingProfileId
+            );
+        
+        $shippingData = json_decode(
+            json_encode($parcelServicePreset),
+            true
+        );
+        
+        $this->getLogger(__METHOD__)->error(
+            'ShippingPreset',
+            [
+                'data' => $shippingData
+            ]
+        );
+        
+        $shippingName =
+            $shippingData['parcelServiceNames'][0]['name']
+            ?? $shippingData['parcelServicePresetNames'][0]['name']
+            ?? 'Shipping';
 
         $this->getLogger(__METHOD__)->error(
             'Shipping data',
