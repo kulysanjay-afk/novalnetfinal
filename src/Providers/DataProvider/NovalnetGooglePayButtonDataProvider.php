@@ -76,95 +76,68 @@ class NovalnetGooglePayButtonDataProvider
             }
             $article_details = [];
 
-            $productNames = [];
-            $couponName   = '';
-            $shippingName = '';
-            
             $itemRepository = pluginApp(ItemRepositoryContract::class);
-            
+
             if (!empty($basket->basketItems)) {
-            
+
                 foreach ($basket->basketItems as $item) {
-            
+
                     // Product
                     if (in_array(($item->itemType ?? 0), [1, 10])) {
-            
+
                         $itemData = $itemRepository->show(
                             (int)$item->itemId
                         );
-            
+
                         $productName = $itemData->texts[0]->name1 ?? '';
-            
-                        $productNames[] = !empty($productName)
-                            ? $productName
-                            : ('Item ID : ' . $item->itemId);
-                    }
-            
-                    
-                }
-            }
 
-            if (!empty($basket->basketItems)) {
+                        $article_details[] = array(
+                            'label'  => $productName .
+                                ' ( ' . (int)$item->quantity .
+                                ' X €' . number_format($item->price, 2) . ' )',
 
-                foreach ($basket->basketItems as $item) {
-            
-                    // Coupon item type
-                    if (($item->itemType ?? 0) == 6) {
-            
-                        $couponName = $item->name ?? '';
-            
-                        // Fallback
-                        if (empty($couponName)) {
-            
-                            $couponName =
-                                'Coupon Item ID : ' . ($item->itemId ?? '');
-                        }
+                            'amount' => (string)$paymentHelper
+                                ->convertAmountToSmallerUnit(
+                                    $item->price * $item->quantity
+                                ),
+
+                            'type'   => 'SUBTOTAL',
+                        );
                     }
                 }
             }
 
-            $this->getLogger(__METHOD__)->error('Coupon Item', [
-                'couponItem' => json_encode($item)
-            ]);
+            // Shipping
+            if ($basket->shippingAmount > 0) {
 
-
-            $this->getLogger(__METHOD__)->error('Basket Details', [
-                'products' => $productNames,
-                'coupon'   => $couponName,
-                'shipping' => $shippingName,
-            ]);
-
-
-
-
-
-
-
-
-
-            $article_details[] = array(
-                'label'  => 'Products',
-                'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->itemSum),
-                'type'   => 'SUBTOTAL',
-            );
-            
-            $article_details[] = array(
-                'label'  => 'Shipping',
-                'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->shippingAmount),
-                'type'   => 'SUBTOTAL',
-            );
-            
-            if ($basket->couponDiscount < 0) {
                 $article_details[] = array(
-                    'label'  => 'Discount',
-                    'amount' => (string)$paymentHelper->convertAmountToSmallerUnit($basket->couponDiscount * -1),
+                    'label'  => 'Shipping',
+                    'amount' => (string)$paymentHelper
+                        ->convertAmountToSmallerUnit(
+                            $basket->shippingAmount
+                        ),
                     'type'   => 'SUBTOTAL',
                 );
             }
 
+            // Discount
+            if ($basket->couponDiscount < 0) {
+
+                $article_details[] = array(
+                    'label'  => 'Discount (' .
+                        $basket->couponCode . ')',
+
+                    'amount' => (string)$paymentHelper
+                        ->convertAmountToSmallerUnit(
+                            abs($basket->couponDiscount)
+                        ),
+
+                    'type'   => 'SUBTOTAL',
+                );
+            }
 
             $articleDetailsJson = json_encode($article_details);
-            
+                        
             // Get the Payment MOP Id
             $paymentMethodDetails = $paymentHelper->getPaymentMethodByKey('NOVALNET_GOOGLEPAY');
             // Get the order language
