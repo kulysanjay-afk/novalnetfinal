@@ -45,6 +45,7 @@ class NovalnetGooglePayButtonDataProvider
                          BasketRepositoryContract $basketRepository,
                          CountryRepositoryContract $countryRepository,
                          WebstoreHelper $webstoreHelper,
+                         ShippingProfileRepositoryContract $shippingProfileRepository,
                          $arg)
     {
         $basket             = $basketRepository->load();
@@ -108,32 +109,21 @@ class NovalnetGooglePayButtonDataProvider
                 }
             }
 
+      
             $shippingName = 'Shipping';
 
-switch ((int)$basket->shippingProfileId) {
+            $shippingProfiles =
+                $shippingProfileRepository->all();
+            
+            foreach ($shippingProfiles as $profile) {
+            
+                if ($profile->id == $basket->shippingProfileId) {
+            
+                    $shippingName = $profile->name;
+                    break;
+                }
+            }
 
-    case 6:
-        $shippingName = 'DHL';
-        break;
-
-    case 7:
-        $shippingName = 'DPD';
-        break;
-
-    case 8:
-        $shippingName = 'UPS';
-        break;
-}
-
-$this->getLogger(__METHOD__)->error('Class Check', [
-    'shippingClass1' => class_exists(
-        'Plenty\Modules\Order\Shipping\Contracts\ShippingProfileRepositoryContract'
-    ),
-
-    'shippingClass2' => class_exists(
-        'Plenty\Modules\Order\Shipping\Profiles\Contracts\ShippingProfileRepositoryContract'
-    ),
-]);
 
 
             // Shipping
