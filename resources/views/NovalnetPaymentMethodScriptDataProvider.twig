@@ -136,10 +136,15 @@ document.querySelectorAll('.payment-method-select input[type="radio"]')
 
 });
 
-$(document).ajaxSend(function(event, jqXHR, settings) {
-    console.log('AJAX URL =>', settings.url);
-    console.log('METHOD =>', settings.type);
-    console.log('DATA =>', settings.data);
+$(document).ajaxComplete(function(event, xhr, settings) {
+
+    if (
+        url.includes('/checkout/shippingId/') ||
+        url.includes('/coupon/')
+    ) {
+    location.reload();
+       
+    }
 });
 
 </script>
