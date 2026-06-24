@@ -138,13 +138,25 @@ document.querySelectorAll('.payment-method-select input[type="radio"]')
 
 $(document).ajaxComplete(function(event, xhr, settings) {
 
+    const url = settings.url;
+
     if (
-        url.includes('/checkout/shippingId/') ||
-        url.includes('/coupon/')
+        (
+            url.includes('/checkout/shippingId/') ||
+            url.includes('/coupon/')
+        ) &&
+        !sessionStorage.getItem('checkoutReloaded')
     ) {
-    location.reload();
-       
+
+        sessionStorage.setItem('checkoutReloaded', '1');
+
+        location.reload();
     }
+});
+
+window.addEventListener('load', function () {
+
+    sessionStorage.removeItem('checkoutReloaded');
 });
 
 </script>
