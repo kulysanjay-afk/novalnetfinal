@@ -19,6 +19,7 @@ use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\Helper\Services\WebstoreHelper;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Item\Item\Contracts\ItemRepositoryContract;
+use Plenty\Modules\Order\Shipping\Profiles\Contracts\ShippingProfileRepositoryContract;
 /**
  * Class NovalnetGooglePayButtonDataProvider
  *
@@ -107,11 +108,28 @@ class NovalnetGooglePayButtonDataProvider
                 }
             }
 
+            $shippingName = 'Shipping';
+
+switch ((int)$basket->shippingProfileId) {
+
+    case 6:
+        $shippingName = 'DHL';
+        break;
+
+    case 7:
+        $shippingName = 'DPD';
+        break;
+
+    case 8:
+        $shippingName = 'UPS';
+        break;
+}
+
             // Shipping
             if ($basket->shippingAmount > 0) {
 
                 $article_details[] = array(
-                    'label'  => 'shipping',
+                    'label'  => $shippingName,
                     'amount' => (string)$paymentHelper
                         ->convertAmountToSmallerUnit(
                             $basket->shippingAmount
