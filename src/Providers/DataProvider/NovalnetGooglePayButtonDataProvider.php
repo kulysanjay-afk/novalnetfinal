@@ -111,12 +111,18 @@ class NovalnetGooglePayButtonDataProvider
 
             $itemRepository = pluginApp(ItemRepositoryContract::class);
 
+            $this->getLogger(__METHOD__)->error('getprocessPayment', [
+                '$path' => $basket->basketItems,                                
+            ]);
+
+
+
             if (!empty($basket->basketItems)) {
 
                 foreach ($basket->basketItems as $item) {
 
                     // Product
-                    if (in_array(($item->itemType ?? 0), [1, 10])) {
+                    if (!empty($item)) {
 
                         $itemData = $itemRepository->show(
                             (int)$item->itemId
@@ -127,7 +133,7 @@ class NovalnetGooglePayButtonDataProvider
                         $article_details[] = array(
                             'label'  => $productName .
                                 ' ( ' . (int)$item->quantity .
-                                ' X €' . number_format($item->price, 2) . ' )',
+                                ' X ' . number_format($item->price, 2) . ' )',
 
                             'amount' => (string)$paymentHelper
                                 ->convertAmountToSmallerUnit(
